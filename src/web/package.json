@@ -1,7 +1,7 @@
 {
-  "name": "raspberry-eye",
+  "name": "raspberry-eye-web",
   "version": "1.0.0",
-  "description": "",
+  "description": "The web interface for the RaspberryEye",
   "main": "server.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

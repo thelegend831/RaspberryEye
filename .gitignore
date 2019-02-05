@@ -62,3 +62,9 @@ typings/
 
 # Keys
 key.json
+
+# Config
+config.js
+
+# Frames
+frames/
