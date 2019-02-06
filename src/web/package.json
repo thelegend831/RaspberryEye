@@ -2,10 +2,10 @@
   "name": "raspberry-eye-web",
   "version": "1.0.0",
   "description": "The web interface for the RaspberryEye",
-  "main": "server.mjs",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node --experimental-modules server.mjs"
+    "start": "node server.js"
   },
   "author": "rdavis",
   "license": "ISC",

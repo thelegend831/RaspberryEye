@@ -1,25 +1,26 @@
-import admin from 'firebase-admin';
-import serviceAccount from './key.json';
-import storage from '@google-cloud/storage';
+var admin = require('firebase-admin');
+var serviceAccount = require('./key.json');
+var fs = require('fs');
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: "https://raspberryeye-1804e.firebaseio.com"
   });
 
+  // Base 64 encode image
 
-var buckets = storage.getBuckets();
 
-console.log(buckets);
+const db = admin.firestore();
 
-//const db = admin.firestore();
+var fileContents = base64_encode('./data/test.png');
 
-// Writing to the database
-// db.collection('events').doc('test').set({
-//   date: 'February 4, 2019 at 2:00:00 PM UTC',
-//   image: 'www.google.com',
-//   sensor: 'front'
-// })
+const title = new Date().toString();
+
+db.collection('events').doc(title).set({
+  date: title,
+  image: fileContents,
+  sensor: 'front'
+})
 
 
 // reading from the database
@@ -53,3 +54,7 @@ console.log(buckets);
 // });
 
 //https://www.youtube.com/watch?v=Z87OZtIYC_0&list=PLnepGR_yu2ekWVHK_PEXGBv3TxFDOrSLs&index=5
+
+function base64_encode(fileName) {
+  return fs.readFileSync(fileName, { encoding: 'base64' });
+}
