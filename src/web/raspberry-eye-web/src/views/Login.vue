@@ -1,10 +1,34 @@
 <template>
-    <div class="login">
-        <h3>Sign In</h3>
-        <input type="text" v-model="email" placeholder="Email"><br>
-        <input type="password" v-model="password" placeholder="Password"><br>
-        <button @click="login">Connection</button>
-    </div>
+        <section class="hero">
+            <div class="hero-body">
+                <div class="container has-text-centered">
+                    <div class="column is-4 is-offset-4">
+                        <img src="../assets/logo.png">
+                        <div class="field">
+                            <p class="control has-icons-left">
+                                <input class="input" type="text" v-model="email" placeholder="Email">
+                                <span class="icon is-small is-left">
+                                    <font-awesome-icon icon="envelope" />
+                                </span>
+                            </p>
+                        </div>
+                        <div class="field">
+                            <p class="control has-icons-left">
+                                <input class="input" type="password" v-model="password" placeholder="Password">
+                                <span class="icon is-small is-left">
+                                    <font-awesome-icon icon="lock" />
+                                </span>
+                            </p>
+                        </div>
+                        <div class="field">
+                            <p class="control">
+                                <button class="button is-success" @click="login">Login</button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 </template>
 
 <script>
@@ -20,7 +44,7 @@ export default {
         }
     },
     methods: {
-        login: function() {
+        login() {
             firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(
                 (user) => {
                     console.log('Sign In Suceess');

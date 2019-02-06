@@ -1,9 +1,39 @@
 <template>
   <div id="app">
-    <img alt="Vue Logo" src="./assets/logo.png">
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a href="#" class="navbar-item">
+          <img src="./assets/logo.png">
+        </a>
+      </div>
+      <div class="navbar-menu">
+        <!-- <div class="navbar-start">
+          <router-link :to="'home'" class="navbar-item">Home</router-link>
+        </div> -->
+        <div class="navbar-end">
+          <a href="#nogo" v-if="this.$root.userLoggedIn" class="navbar-item" @click="logout">Logout</a>
+        </div>
+      </div>
+    </nav>    
     <router-view/>
   </div>
 </template>
+
+<script>
+import firebase from 'firebase';
+
+export default {
+  name: 'app',
+  components: {},
+  methods: {
+    logout() {
+      firebase.auth().signOut().then(() => {
+        this.$router.replace('login');
+      })
+    }
+  }
+}
+</script>
 
 <style lang="scss">
 #app {
