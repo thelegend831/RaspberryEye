@@ -22,7 +22,7 @@
                         </div>
                         <div class="field">
                             <p class="control">
-                                <button class="button is-success" @click="login">Login</button>
+                                <button class="button is-dark" @click="login">Login</button>
                             </p>
                         </div>
                     </div>
