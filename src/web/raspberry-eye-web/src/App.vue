@@ -11,7 +11,7 @@
           <router-link :to="'home'" class="navbar-item">Home</router-link>
         </div> -->
         <div class="navbar-end">
-          <a href="#nogo" v-if="this.$store.getters.isUserLoggedIn" class="navbar-item" @click="logout">Logout</a>
+          <a href="#nogo" v-if="isUserLoggedIn" class="navbar-item" @click="logout">Logout</a>
         </div>
       </div>
     </nav>    
@@ -29,6 +29,11 @@ export default {
       this.$store.dispatch('userLogout');
     }
   },
+  computed: {
+    isUserLoggedIn() {
+      return this.$store.getters.user.user;
+    }
+  }
 }
 </script>
 
