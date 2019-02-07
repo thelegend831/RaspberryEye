@@ -1,27 +1,17 @@
 <template>
   <div class="home">
-    <Event v-for="event in events" :event="event" :key="event.id" />
+    <h1>Events</h1>
   </div>
 </template>
 
 <script>
+//import { mapState } from 'vuex'
 import Event from '../components/Event'
-import { mapState } from 'vuex'
 
 export default {
     name: 'Home',
-    component: {
+    components: {
       Event
-    },
-
-    computed: {
-      ...mapState( {
-        events: state => state.all
-      })
-    },
-
-    created() {
-      this.$store.dispatch('events')
     }
 }
 </script>

@@ -1,17 +1,12 @@
 <template>
-    <div>
-        {{ dbEvent.date }}
-    </div>
+    <div>{{ this.event.date }}</div>
 </template>
 
 <script>
 export default {
     name: 'Event',
     props: {
-        dbEvent: {
-            type: Object,
-            require: true
-        }
+        event: Object
     }
 }
 </script>

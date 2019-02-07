@@ -25,16 +25,4 @@ firebase.auth().onAuthStateChanged(() => {
       render: h => h(App)
     }).$mount('#app');
   }
-
-  // TODO: Add this to the store instead??
-  // Because the firebase currentUser isn't observable,
-  // and it's userful to have an observable property for 
-  // a user being logged in, i've made userLoggedIn and attached
-  // it to the app so it can be observed from anywhere.
-  if (firebase.auth().currentUser) {
-    app.userLoggedIn = true;
-  }
-  else {
-    app.userLoggedIn = false;
-  }
 });

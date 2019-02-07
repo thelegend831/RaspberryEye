@@ -22,7 +22,7 @@
                         </div>
                         <div class="field">
                             <p class="control">
-                                <button class="button is-dark" @click="login">Login</button>
+                                <button class="button is-dark" @click="submit">Login</button>
                             </p>
                         </div>
                     </div>
@@ -44,18 +44,24 @@ export default {
         }
     },
     methods: {
-        login() {
-            firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(
-                (user) => {
-                    console.log('Sign In Suceess');
-                    this.$router.replace('home');
-                },
-                (err) => {
-                    alert('Sign In Error: ' + err);
-                    console.error(err)
-                }
-            )
+        submit() {
+            this.$store.dispatch('userLogin', {
+                email: this.email,
+                password: this.password
+            });
         }
+        // login() {
+        //     firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(
+        //         (user) => {
+        //             console.log('Sign In Suceess');
+        //             this.$router.replace('home');
+        //         },
+        //         (err) => {
+        //             alert('Sign In Error: ' + err);
+        //             console.error(err)
+        //         }
+        //     )
+        // }
     }
 }
 </script>

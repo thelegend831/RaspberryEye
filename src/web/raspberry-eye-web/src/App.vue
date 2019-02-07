@@ -7,11 +7,11 @@
         </a>
       </div>
       <div class="navbar-menu">
-        <!-- <div class="navbar-start">
+        <!-- <div class="navbar-start">v-if="this.$store.getters.isUserLoggedIn"
           <router-link :to="'home'" class="navbar-item">Home</router-link>
         </div> -->
         <div class="navbar-end">
-          <a href="#nogo" v-if="this.$root.userLoggedIn" class="navbar-item" @click="logout">Logout</a>
+          <a href="#nogo" v-if="this.$store.getters.isUserLoggedIn" class="navbar-item" @click="logout">Logout</a>
         </div>
       </div>
     </nav>    
@@ -20,21 +20,15 @@
 </template>
 
 <script>
-import firebase from 'firebase';
 
 export default {
   name: 'app',
   components: {},
   methods: {
     logout() {
-      firebase.auth().signOut().then(() => {
-        this.$router.replace('login');
-      })
+      this.$store.dispatch('userLogout');
     }
   },
-  created() {
-    console.log(this.$store.state.db);
-  }
 }
 </script>
 
