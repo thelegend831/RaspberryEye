@@ -32,6 +32,8 @@ export default new Vuex.Store({
       Firebase
         .firestore()
         .collection('events')
+        .orderBy('date', 'desc')
+        .limit(10)
         .onSnapshot((querySnapshot) => {
           let data = querySnapshot.docs.map(x => x.data());
           commit('setEvents', data);

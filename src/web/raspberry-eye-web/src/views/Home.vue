@@ -1,8 +1,6 @@
 <template>
-  <div class="home container">
-    <div class="columns">
+  <div class="columns is-multiline">
       <event v-for="(event, id) in this.$store.getters.events" :key="id" :event="event"></event>
-    </div>
   </div>
 </template>
 
