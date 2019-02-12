@@ -2,16 +2,16 @@
   <div id="app">
     <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
-        <a href="#" class="navbar-item">
+        <a class="navbar-item">
           <img src="./assets/logo.png">
         </a>
       </div>
       <div class="navbar-menu">
-        <!-- <div class="navbar-start">v-if="this.$store.getters.isUserLoggedIn"
-          <router-link :to="'home'" class="navbar-item">Home</router-link>
-        </div> -->
+        <div v-if="userEmail" class="navbar-start">
+          <a class="navbar-item" href="#">{{ userEmail }}</a>
+        </div>
         <div class="navbar-end">
-          <a href="#nogo" v-if="isUserLoggedIn" class="navbar-item" @click="logout">Logout</a>
+          <a href="#nogo" v-if="userEmail" class="navbar-item" @click="logout">Logout</a>
         </div>
       </div>
     </nav>    
@@ -30,8 +30,8 @@ export default {
     }
   },
   computed: {
-    isUserLoggedIn() {
-      return this.$store.getters.user.user;
+    userEmail() {
+      return this.$store.getters.user.email;
     }
   }
 }

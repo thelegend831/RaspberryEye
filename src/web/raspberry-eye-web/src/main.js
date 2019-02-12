@@ -24,7 +24,22 @@ firebase.auth().onAuthStateChanged(() => {
     app = new Vue({
       router,
       store,
-      render: h => h(App)
+      render: h => h(App),
+      created() {
+        firebase
+        .auth()
+        .onAuthStateChanged((user) => {
+          console.log('Auth state changed');
+          if (user) {
+            console.log('User logged in');
+            store.commit('setUser', user);
+          }
+          else {
+            console.log('User logged out');
+            store.commit('setUser', {});
+          }
+        });
+      }
     }).$mount('#app');
   }
 });

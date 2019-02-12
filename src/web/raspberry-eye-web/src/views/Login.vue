@@ -6,7 +6,7 @@
                         <img src="../assets/logo.png">
                         <div class="field">
                             <p class="control has-icons-left">
-                                <input class="input" type="text" v-model="email" placeholder="Email">
+                                <input class="input" type="text" name="username" v-model="email" placeholder="Email">
                                 <span class="icon is-small is-left">
                                     <font-awesome-icon icon="envelope" />
                                 </span>
@@ -50,18 +50,6 @@ export default {
                 password: this.password
             });
         }
-        // login() {
-        //     firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(
-        //         (user) => {
-        //             console.log('Sign In Suceess');
-        //             this.$router.replace('home');
-        //         },
-        //         (err) => {
-        //             alert('Sign In Error: ' + err);
-        //             console.error(err)
-        //         }
-        //     )
-        // }
     }
 }
 </script>

@@ -19,6 +19,8 @@ export default new Vuex.Store({
 
   mutations: {
     setUser(state, user) {
+      console.log('Store setting user');
+      console.log(user);
       state.user = user;
     },
 
@@ -33,7 +35,7 @@ export default new Vuex.Store({
         .firestore()
         .collection('events')
         .orderBy('date', 'desc')
-        .limit(10)
+        .limit(12)
         .onSnapshot((querySnapshot) => {
           let data = querySnapshot.docs.map(x => x.data());
           commit('setEvents', data);
@@ -65,7 +67,7 @@ export default new Vuex.Store({
           commit('setUser', {});
           alert(err);
           console.log(err);
-        })
+        });
     }
   },
 
