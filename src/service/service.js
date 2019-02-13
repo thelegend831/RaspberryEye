@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var Gpio = require('onoff').Gpio;
 var config = require('./config');
 var path = require('path');
@@ -58,7 +60,8 @@ function captureImage(callback) {
         '/' +
         fileName;
 
-    console.log('Executing command: ' + cmd);
+    //console.log('Executing command: ' + cmd);
+    console.log('Executing FFMPEG Command');
 
     exec(cmd, function (err, stdout, stderr) {
         if (err) {
@@ -83,9 +86,23 @@ function uploadImage(fileName) {
         date: new Date(),
         image: fileContents,
         sensor: 'front'
-    });
+    })
+    .then(function() {
+    	console.log('Record written to the database, we can now delete the file');
+	
+	fs.unlink('./frames/' + fileName, function(err) {
+	    if (err) {
+		console.log('There was an error deleting the file: ' + fileName + ' -> ' + err);
+	    }
+	    else {
+	        console.log(fileName + ' deleted');
+	    }
+	});
 
-    console.log('Record has been added to the collection.');
+    })
+    .catch(function(error) {
+    	console.log('An error occured saving the file to the database: ' + error);
+    });
 }
 
 function base64_encode(fileName) {
