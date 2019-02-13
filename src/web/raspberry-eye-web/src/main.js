@@ -11,8 +11,6 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 library.add(faEnvelope);
 library.add(faLock);
 
-Vue.use(require('vue-moment'));
-
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false
@@ -29,13 +27,10 @@ firebase.auth().onAuthStateChanged(() => {
         firebase
         .auth()
         .onAuthStateChanged((user) => {
-          console.log('Auth state changed');
           if (user) {
-            console.log('User logged in');
             store.commit('setUser', user);
           }
           else {
-            console.log('User logged out');
             store.commit('setUser', {});
           }
         });

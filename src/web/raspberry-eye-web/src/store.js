@@ -10,7 +10,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     user: {},
-    events: []
+    events: [],
+    eventPageSize: 24
   },
 
   modules: {
@@ -19,27 +20,41 @@ export default new Vuex.Store({
 
   mutations: {
     setUser(state, user) {
-      console.log('Store setting user');
-      console.log(user);
       state.user = user;
     },
 
     setEvents(state, payload) {
-      state.events = payload;
+      state.events = state.events.concat(payload);
+    },
+
+    updateEventIndex(state, count) {
+      state.eventIndex += count;
     }
   },
 
   actions: {
     getEvents( { commit } ) {
-      Firebase
-        .firestore()
-        .collection('events')
-        .orderBy('date', 'desc')
-        .limit(12)
-        .onSnapshot((querySnapshot) => {
-          let data = querySnapshot.docs.map(x => x.data());
-          commit('setEvents', data);
-        });
+      return new Promise((resolve) => {
+        let cursor = new Date()
+        let last = this.state.events[this.state.events.length - 1];
+
+        if (last) {
+          cursor = last.date;
+        }
+
+        Firebase
+          .firestore()
+          .collection('events')
+          .orderBy('date', 'desc')
+          .startAfter(cursor)
+          .limit(this.state.eventPageSize)
+          .onSnapshot((querySnapshot) => {
+            let data = querySnapshot.docs.map(x => x.data());
+            commit('setEvents', data);
+            resolve();
+          });
+      });
+      
     },
 
     userLogout( { commit } ) {
@@ -47,7 +62,6 @@ export default new Vuex.Store({
         .auth()
         .signOut()
         .then(() => {
-          console.log('Clearing user');
           commit('setUser', {});
           router.push('/login');
         })
@@ -58,15 +72,12 @@ export default new Vuex.Store({
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(user => {
-          console.log('setting user' + user);
           commit('setUser', user);
           router.push('/home');
-          console.log(user + ': is logged in');
         })
         .catch((err) => {
           commit('setUser', {});
           alert(err);
-          console.log(err);
         });
     }
   },

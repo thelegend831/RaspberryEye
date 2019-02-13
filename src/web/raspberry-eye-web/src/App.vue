@@ -8,7 +8,7 @@
       </div>
       <div class="navbar-menu">
         <div v-if="userEmail" class="navbar-start">
-          <a class="navbar-item" href="#">{{ userEmail }}</a>
+          <a class="navbar-item">{{ userEmail }}</a>
         </div>
         <div class="navbar-end">
           <a href="#nogo" v-if="userEmail" class="navbar-item" @click="logout">Logout</a>

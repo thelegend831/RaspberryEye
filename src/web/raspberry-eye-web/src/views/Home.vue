@@ -13,8 +13,33 @@ export default {
       Event
     },
 
+    data() {
+      return {
+        scrollDebounce: true
+      }
+    },
+
+    methods: {
+      hookUpScroll() {
+        window.onscroll = () => {
+          let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight > document.documentElement.offsetHeight;
+          if (bottomOfWindow && this.scrollDebounce) {
+            this.scrollDebounce = false;
+            
+            // Load more data and reset the debounce
+            console.log('Fetching more events');
+            this.$store.dispatch('getEvents')
+            .then(() => {
+              this.scrollDebounce = true;
+            });
+          }
+        }
+      }
+    },
+
     mounted() {
       this.$store.dispatch('getEvents');
+      this.hookUpScroll();
     }
 }
 </script>
