@@ -5,8 +5,13 @@
         <a class="navbar-item">
           <img src="./assets/logo.png">
         </a>
+        <div class="navbar-burger burger" @click="toggleMobileMenu()">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>  
       </div>
-      <div class="navbar-menu">
+      <div class="navbar-menu" v-bind:class="{'is-active' : burger}">
         <div v-if="userEmail" class="navbar-start">
           <a class="navbar-item">{{ userEmail }}</a>
         </div>
@@ -27,8 +32,19 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch('userLogout');
+    },
+
+    toggleMobileMenu() {
+      this.burger = !this.burger;
     }
   },
+
+  data() {
+    return {
+      burger: false
+    }
+  },
+
   computed: {
     userEmail() {
       return this.$store.getters.user.email;
