@@ -24,7 +24,7 @@ export default new Vuex.Store({
     },
 
     setEvents(state, payload) {
-      state.events = state.events.concat(payload);
+      state.events = payload;
     },
 
     updateEventIndex(state, count) {
@@ -34,27 +34,15 @@ export default new Vuex.Store({
 
   actions: {
     getEvents( { commit } ) {
-      return new Promise((resolve) => {
-        let cursor = new Date()
-        let last = this.state.events[this.state.events.length - 1];
-
-        if (last) {
-          cursor = last.date;
-        }
-
         Firebase
           .firestore()
           .collection('events')
           .orderBy('date', 'desc')
-          .startAfter(cursor)
           .limit(this.state.eventPageSize)
           .onSnapshot((querySnapshot) => {
             let data = querySnapshot.docs.map(x => x.data());
             commit('setEvents', data);
-            resolve();
-          });
-      });
-      
+          });      
     },
 
     userLogout( { commit } ) {
