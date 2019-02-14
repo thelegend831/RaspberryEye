@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import Firebase, { firestore } from 'firebase'
 import {config} from '../private/config'
 import router from './router'
+import { reject } from 'q';
 
 Firebase.initializeApp(config);
 Vue.use(Vuex)
@@ -11,7 +12,7 @@ export default new Vuex.Store({
   state: {
     user: {},
     events: [],
-    eventPageSize: 24
+    unsubscribe: undefined
   },
 
   modules: {
@@ -33,16 +34,24 @@ export default new Vuex.Store({
   },
 
   actions: {
-    getEvents( { commit } ) {
-        Firebase
+    getEvents( { commit }, { pageSize } ) {
+      return new Promise((resolve, reject) => {
+        // Unsubscribe if needed  
+        if (this.state.unsubscribe) {
+          this.state.unsubscribe();
+        }
+
+        this.state.unsubscribe = Firebase
           .firestore()
           .collection('events')
           .orderBy('date', 'desc')
-          .limit(this.state.eventPageSize)
+          .limit(pageSize)
           .onSnapshot((querySnapshot) => {
             let data = querySnapshot.docs.map(x => x.data());
             commit('setEvents', data);
-          });      
+            resolve();
+          });
+      });
     },
 
     userLogout( { commit } ) {
@@ -72,6 +81,6 @@ export default new Vuex.Store({
 
   getters: {
     user: state => state.user,
-    events: state => state.events
+    events: state => state.events,
   }
 })

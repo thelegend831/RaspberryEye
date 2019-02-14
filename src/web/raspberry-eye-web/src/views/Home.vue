@@ -15,7 +15,8 @@ export default {
 
     data() {
       return {
-        scrollDebounce: true
+        scrollDebounce: true,
+        numberOfEventsToShow: 24
       }
     },
 
@@ -23,12 +24,14 @@ export default {
       hookUpScroll() {
         window.onscroll = () => {
           let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight > document.documentElement.offsetHeight;
+                    
           if (bottomOfWindow && this.scrollDebounce) {
             this.scrollDebounce = false;
-            
+                        
             // Load more data and reset the debounce
             console.log('Fetching more events');
-            this.$store.dispatch('getEvents')
+            this.numberOfEventsToShow += this.numberOfEventsToShow;
+            this.$store.dispatch('getEvents', { pageSize: this.numberOfEventsToShow })
             .then(() => {
               this.scrollDebounce = true;
             });
@@ -38,8 +41,8 @@ export default {
     },
 
     mounted() {
-      this.$store.dispatch('getEvents');
-      //this.hookUpScroll();
+      this.$store.dispatch('getEvents', { pageSize: this.numberOfEventsToShow });
+      this.hookUpScroll();
     }
 }
 </script>
