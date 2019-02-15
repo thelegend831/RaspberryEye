@@ -31,12 +31,12 @@ sensor.watch(function (err, value) {
     }
 
     if (value && monitoring) {
-        
+
         // Toggle the flag off 
         monitoring = false;
 
         // start the debounce timer
-        setTimeout(function() {
+        setTimeout(function () {
             monitoring = true;
         }, config.process.debounce);
 
@@ -56,7 +56,7 @@ function captureImage(callback) {
         config.camera.channel +
         ' -vframes ' +
         config.ffmpeg.framesCount + ' ' +
-	'-s ' + config.ffmpeg.scale + ' ' +
+        '-s ' + config.ffmpeg.scale + ' ' +
         path.join(path.resolve(), config.ffmpeg.framesDirectory) +
         '/' +
         fileName;
@@ -77,7 +77,7 @@ function captureImage(callback) {
 }
 
 function uploadImage(fileName) {
-    
+
     const db = admin.firestore();
     var fileContents = base64_encode('./frames/' + fileName);
 
@@ -88,22 +88,22 @@ function uploadImage(fileName) {
         image: fileContents,
         sensor: 'front'
     })
-    .then(function() {
-    	console.log('Record written to the database, we can now delete the file');
-	
-	fs.unlink('./frames/' + fileName, function(err) {
-	    if (err) {
-		console.log('There was an error deleting the file: ' + fileName + ' -> ' + err);
-	    }
-	    else {
-	        console.log(fileName + ' deleted');
-	    }
-	});
+        .then(function () {
+            console.log('Record written to the database, we can now delete the file');
 
-    })
-    .catch(function(error) {
-    	console.log('An error occured saving the file to the database: ' + error);
-    });
+            fs.unlink('./frames/' + fileName, function (err) {
+                if (err) {
+                    console.log('There was an error deleting the file: ' + fileName + ' -> ' + err);
+                }
+                else {
+                    console.log(fileName + ' deleted');
+                }
+            });
+
+        })
+        .catch(function (error) {
+            console.log('An error occured saving the file to the database: ' + error);
+        });
 }
 
 function base64_encode(fileName) {
