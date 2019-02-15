@@ -2,17 +2,9 @@
     <div class="column is-one-quarter-desktop is-half-tablet">
         <div class="card">
             <div class="card-image">
-                <figure class="image is-3by2">
-                    <img @click="showModal()" v-bind:src="imgSrc">
+                <figure class="image is-4by3">
+                    <img @click="showModal()" v-bind:src="imgSrc" style="cursor: pointer;">
                 </figure>
-                <!-- <div class="card-content is-overlay is-clipped">
-                    <span class="tag is-info">
-                        {{ this.event.sensor }}
-                    </span>
-                </div> -->
-                <!-- <footer class="card-footer">
-                    <span class="card-footer-item">{{ this.event.date | moment("dddd, MMMM Do YYYY") }}</span>
-                </footer> -->
             </div>
         </div>
         <div class="modal" v-bind:class="{ 'is-active': isModalActive }">
