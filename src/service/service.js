@@ -46,7 +46,7 @@ sensor.watch(function (err, value) {
 
 function captureImage(callback) {
     var fileName = Date.now() + config.ffmpeg.framesExt;
-    var cmd = 'ffmpeg -y -i rtsp://' +
+    var cmd = 'ffmpeg -y -rtsp_transport tcp -i rtsp://' +
         config.camera.username +
         ':' +
         config.camera.password +
@@ -56,6 +56,7 @@ function captureImage(callback) {
         config.camera.channel +
         ' -vframes ' +
         config.ffmpeg.framesCount + ' ' +
+	'-s ' + config.ffmpeg.scale + ' ' +
         path.join(path.resolve(), config.ffmpeg.framesDirectory) +
         '/' +
         fileName;
