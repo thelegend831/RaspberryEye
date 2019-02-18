@@ -13,10 +13,11 @@
       </div>
       <div class="navbar-menu" v-bind:class="{'is-active' : burger}">
         <div v-if="userEmail" class="navbar-start">
-          <a class="navbar-item">{{ userEmail }}</a>
+          <router-link v-if="userEmail" class="navbar-item" to="home">Home</router-link>
+          <router-link v-if="userEmail" class="navbar-item" to="settings">Settings</router-link>
         </div>
         <div class="navbar-end">
-          <a href="#nogo" v-if="userEmail" class="navbar-item" @click="logout">Logout</a>
+          <a href="#nogo" v-if="userEmail" class="navbar-item" @click="logout"><font-awesome-icon icon="sign-out-alt" /></a>
         </div>
       </div>
     </nav>    

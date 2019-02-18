@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
+import Home from './views/Home'
+import Settings from './views/Settings'
 import Login from './views/Login'
 import firebase from 'firebase'
 
@@ -20,6 +21,14 @@ const router = new Router({
       path: '/login',
       name: 'login',
       component: Login
+    },
+    {
+      path: '/settings',
+      name: 'settings',
+      component: Settings,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/home',

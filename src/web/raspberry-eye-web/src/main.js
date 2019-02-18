@@ -4,13 +4,14 @@ import router from './router'
 import store from './store'
 import firebase from 'firebase'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
+import { faEnvelope, faLock, faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 require('./assets/app.scss');
 
 library.add(faEnvelope);
 library.add(faLock);
+library.add(faSignOutAlt);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

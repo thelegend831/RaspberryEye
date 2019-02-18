@@ -69,6 +69,7 @@ export default new Vuex.Store({
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(user => {
+          // TODO: Load the user's settings before saving them to the store
           commit('setUser', user);
           router.push('/home');
         })
