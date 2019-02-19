@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import Firebase, { firestore } from 'firebase'
-import {config} from '../private/config'
+import { config } from '../private/config'
 import router from './router'
 import { reject } from 'q';
 
@@ -16,7 +16,7 @@ export default new Vuex.Store({
   },
 
   modules: {
-    
+
   },
 
   mutations: {
@@ -34,7 +34,7 @@ export default new Vuex.Store({
   },
 
   actions: {
-    getEvents( { commit }, { pageSize } ) {
+    getEvents({ commit }, { pageSize }) {
       return new Promise((resolve, reject) => {
         // Unsubscribe if needed  
         if (this.state.unsubscribe) {
@@ -48,13 +48,30 @@ export default new Vuex.Store({
           .limit(pageSize)
           .onSnapshot((querySnapshot) => {
             let data = querySnapshot.docs.map(x => x.data());
+
+            let eventsByTimeWindow = data.reduce(function (accum, event) {
+              if (accum.length) {
+                let last = accum[accum.length - 1];
+                if (last.end - event.date.seconds < 60) {
+                  last.events.push(event);
+                  last.end = event.date.seconds;
+                  return accum;
+                }
+              }
+
+              accum.push({ end: event.date.seconds, events: [event] });
+              return accum;
+            }, []);
+
+            console.log(eventsByTimeWindow);
+
             commit('setEvents', data);
             resolve();
           });
       });
     },
 
-    userLogout( { commit } ) {
+    userLogout({ commit }) {
       Firebase
         .auth()
         .signOut()
@@ -64,7 +81,7 @@ export default new Vuex.Store({
         })
     },
 
-    userLogin( { commit }, { email, password } ) {
+    userLogin({ commit }, { email, password }) {
       Firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
