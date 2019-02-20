@@ -1,6 +1,6 @@
 <template>
   <div class="columns is-multiline">
-      <event v-for="(event, id) in this.$store.getters.events" :key="id" :event="event"></event>
+      <event v-for="(event, id) in this.$store.getters.events" :key="id" :index="id" :event="event"></event>
   </div>
 </template>
 

@@ -63,9 +63,7 @@ export default new Vuex.Store({
               return accum;
             }, []);
 
-            console.log(eventsByTimeWindow);
-
-            commit('setEvents', data);
+            commit('setEvents', eventsByTimeWindow);
             resolve();
           });
       });

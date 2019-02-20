@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from './views/Home'
 import Settings from './views/Settings'
 import Login from './views/Login'
+import Collection from './views/Collection'
 import firebase from 'firebase'
 
 Vue.use(Router)
@@ -26,6 +27,14 @@ const router = new Router({
       path: '/settings',
       name: 'settings',
       component: Settings,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/collection/:id',
+      name: 'collection',
+      component: Collection,
       meta: {
         requiresAuth: true
       }

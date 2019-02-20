@@ -7,11 +7,6 @@
         </figure>
       </div>
     </div>
-    <footer class="card-footer">
-      <router-link v-if="hasChildren" class="card-footer-item" v-bind:to="{ name: 'collection', params: { id: this.index }}">
-        <button class="button is-info">View {{ this.event.events.length }} Images In Collection</button>
-      </router-link>
-    </footer>
     <div class="modal" v-bind:class="{ 'is-active': isModalActive }">
       <div class="modal-background"></div>
       <div class="modal-content">
@@ -21,17 +16,15 @@
       </div>
       <button @click="hideModal()" class="modal-close is-large" aria-label="close"></button>
     </div>
-  </div> 
+  </div>
 </template>
 
 <script>
 export default {
-  name: "Event",
+  name: "Moment",
   props: {
-    event: Object,
-    index: Number
+    event: Object
   },
-
   methods: {
     showModal() {
       this.isModalActive = true;
@@ -50,11 +43,7 @@ export default {
 
   computed: {
     imgSrc() {
-      return "data:image/png;base64," + this.event.events[0].image;
-    },
-
-    hasChildren() {
-        return this.event.events.length > 1;
+      return "data:image/png;base64," + this.event.image;
     }
   }
 };
