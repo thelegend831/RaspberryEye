@@ -3,7 +3,6 @@ import Vuex from 'vuex'
 import Firebase, { firestore } from 'firebase'
 import { config } from '../private/config'
 import router from './router'
-import { reject } from 'q';
 
 Firebase.initializeApp(config);
 Vue.use(Vuex)
@@ -11,6 +10,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     user: {},
+    settings: {},
     events: [],
     unsubscribe: undefined
   },
@@ -24,6 +24,19 @@ export default new Vuex.Store({
       state.user = user;
     },
 
+    setSettings(state, settings) {
+      state.settings = settings;
+      
+      // Fire and forget and send this back to the db 
+      let settingsRef = Firebase.firestore().collection('settings').doc(this.state.user.uid);
+      settingsRef.set(settings).then(() => {
+        console.log('User settings updated');
+      })
+      .catch(error => {
+        console.error(error);
+      });
+    },
+
     setEvents(state, payload) {
       state.events = payload;
     },
@@ -34,13 +47,13 @@ export default new Vuex.Store({
   },
 
   actions: {
-    getEvents({ commit }, { pageSize }) {
+
+    getEvents({ commit }, { pageSize, groupTime }) {
       return new Promise((resolve, reject) => {
         // Unsubscribe if needed  
         if (this.state.unsubscribe) {
           this.state.unsubscribe();
         }
-
         this.state.unsubscribe = Firebase
           .firestore()
           .collection('events')
@@ -52,7 +65,7 @@ export default new Vuex.Store({
             let eventsByTimeWindow = data.reduce(function (accum, event) {
               if (accum.length) {
                 let last = accum[accum.length - 1];
-                if (last.end - event.date.seconds < 60) {
+                if (last.end - event.date.seconds < groupTime) {
                   last.events.push(event);
                   last.end = event.date.seconds;
                   return accum;
@@ -70,6 +83,11 @@ export default new Vuex.Store({
     },
 
     userLogout({ commit }) {
+
+      if (this.state.unsubscribe) {
+        this.state.unsubscribe();
+      }
+
       Firebase
         .auth()
         .signOut()
@@ -79,13 +97,33 @@ export default new Vuex.Store({
         })
     },
 
+    getUserSettings({ commit }, { uid }) {
+
+      let settingsRef = Firebase.firestore().collection('settings').doc(uid);
+
+      settingsRef.get().then((doc) => {
+        if (doc.exists) {
+          commit('setSettings', doc.data());
+        }
+        else {
+          console.log('Creating new settings objcet for user: ' + uid);
+
+          // Default user settings
+          let newSettings = {
+            groupTime: 60,
+            notifications: false
+          };
+
+          commit('setSettings', newSettings);
+        }
+      });
+    },
+
     userLogin({ commit }, { email, password }) {
       Firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(user => {
-          // TODO: Load the user's settings before saving them to the store
-          commit('setUser', user);
           router.push('/home');
         })
         .catch((err) => {
@@ -98,5 +136,6 @@ export default new Vuex.Store({
   getters: {
     user: state => state.user,
     events: state => state.events,
+    settings: state => state.settings
   }
 })

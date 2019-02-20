@@ -31,7 +31,7 @@ export default {
             // Load more data and reset the debounce
             console.log('Fetching more events');
             this.numberOfEventsToShow += this.numberOfEventsToShow;
-            this.$store.dispatch('getEvents', { pageSize: this.numberOfEventsToShow })
+            this.$store.dispatch('getEvents', { pageSize: this.numberOfEventsToShow, groupTime: this.$store.getters.settings.groupTime })
             .then(() => {
               this.scrollDebounce = true;
             });
@@ -41,7 +41,7 @@ export default {
     },
 
     mounted() {
-      this.$store.dispatch('getEvents', { pageSize: this.numberOfEventsToShow });
+      this.$store.dispatch('getEvents', { pageSize: this.numberOfEventsToShow, groupTime: this.$store.getters.settings.groupTime });
       this.hookUpScroll();
     }
 }

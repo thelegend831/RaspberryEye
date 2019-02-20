@@ -8,7 +8,6 @@
               <input
                 id="notificationsSwitch"
                 v-model="notifications"
-                v-on:change="handleNotificationsToggle"
                 type="checkbox"
                 name="notificationsSwitch"
                 class="switch input"
@@ -20,11 +19,10 @@
             <div class="control">
               <label for="groupTime">Group Time</label>
               <input
+                type="number"
                 name="groupTime"
                 id="groupTime"
-                type="text"
-                v-model="groupTime"
-                v-on:change="handleGroupTimeChange"
+                v-model.lazy="groupTime"
                 class="input"
               >
             </div>
@@ -38,25 +36,36 @@
 <script>
 export default {
   name: "Settings",
-  props: {
-    settings: Object
-  },
-
-  data() {
-    return {
-      notifications: true,
-      groupTime: 0
-    };
-  },
-
   methods: {
-    handleGroupTimeChange(e) {
-      console.log(this.groupTime);
+    updateSettings(settings) {
+      this.$store.commit('setSettings', settings );
+    }
+  },
+  computed: {
+    notifications: {
+      get() {
+        return this.$store.getters.settings.notifications;
+      },
+
+      set(value) {
+        this.updateSettings({
+          groupTime: this.groupTime,
+          notifications: value
+        });
+      }
     },
 
-    handleNotificationsToggle(e) {
-      // TODO: save this user settings to the firebase store
-      console.log(this.notifications);
+    groupTime: {
+      get() {
+        return this.$store.getters.settings.groupTime;
+      },
+
+      set(value) {
+        this.updateSettings({
+          groupTime: parseInt(value),
+          notifications: this.notifications
+        });
+      }
     }
   }
 };
