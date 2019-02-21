@@ -46,6 +46,19 @@ export default {
     }
   },
 
+  mounted() {
+    window.addEventListener('blur', (e) => {
+      this.$store.commit('setFocus', false);
+    });
+
+    window.addEventListener('focus', (e) => {
+      this.$store.commit('setFocus', true);
+      if (document.title.startsWith('*')) {
+        document.title = document.title.split('*')[1].trim();
+      }
+    });
+  },
+
   computed: {
     userEmail() {
       return this.$store.getters.user.email;

@@ -30,9 +30,9 @@ firebase.auth().onAuthStateChanged(() => {
         .auth()
         .onAuthStateChanged((user) => {
           if (user) {
-            // Look up the user settings
-            store.dispatch('getUserSettings', { uid: user.uid });
             store.commit('setUser', user);
+
+            store.dispatch('getUserSettings', { uid: user.uid });
           }
           else {
             store.commit('setUser', {});

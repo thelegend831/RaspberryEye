@@ -3,16 +3,19 @@ import Vuex from 'vuex'
 import Firebase, { firestore } from 'firebase'
 import { config } from '../private/config'
 import router from './router'
+import { stat } from 'fs';
 
 Firebase.initializeApp(config);
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    focus: true,
     user: {},
     settings: {},
     events: [],
-    unsubscribe: undefined
+    unsubscribe: undefined,
+    eventPageSize: 24
   },
 
   modules: {
@@ -20,21 +23,25 @@ export default new Vuex.Store({
   },
 
   mutations: {
+    setFocus(state, focus) {
+      state.focus = focus;
+    },
+
     setUser(state, user) {
       state.user = user;
     },
 
     setSettings(state, settings) {
       state.settings = settings;
-      
+
       // Fire and forget and send this back to the db 
       let settingsRef = Firebase.firestore().collection('settings').doc(this.state.user.uid);
       settingsRef.set(settings).then(() => {
         console.log('User settings updated');
       })
-      .catch(error => {
-        console.error(error);
-      });
+        .catch(error => {
+          console.error(error);
+        });
     },
 
     setEvents(state, payload) {
@@ -77,7 +84,11 @@ export default new Vuex.Store({
             }, []);
 
             commit('setEvents', eventsByTimeWindow);
-            resolve();
+            console.log('Finished getting events from firebase snapshot, setting window title');
+            if (!this.state.focus && !document.title.startsWith('*')) {
+              document.title = '* ' + document.title;
+            }
+            resolve(eventsByTimeWindow.length);
           });
       });
     },
@@ -98,25 +109,35 @@ export default new Vuex.Store({
     },
 
     getUserSettings({ commit }, { uid }) {
+      console.log('Getting user settings from db');
 
-      let settingsRef = Firebase.firestore().collection('settings').doc(uid);
+      Firebase
+        .firestore()
+        .collection('settings')
+        .doc(uid)
+        .onSnapshot((doc) => {
+          let newSettings = {};
+          console.log('User settings in db changed');
 
-      settingsRef.get().then((doc) => {
-        if (doc.exists) {
-          commit('setSettings', doc.data());
-        }
-        else {
-          console.log('Creating new settings objcet for user: ' + uid);
+          // we want to watch the user settings to make sure we update the events when the user changes their settings
+          if (doc.exists) {
+            newSettings = doc.data();
+          }
+          else {
+            console.log('Creating new settings objcet for user: ' + uid);
 
-          // Default user settings
-          let newSettings = {
-            groupTime: 60,
-            notifications: false
-          };
+            // Default user settings
+            newSettings = {
+              groupTime: 60,
+              notifications: false
+            };
+          }
 
           commit('setSettings', newSettings);
-        }
-      });
+
+          // now we've got the settings we can reload the events
+          this.dispatch('getEvents', { pageSize: this.state.eventPageSize, groupTime: newSettings.groupTime });
+        });
     },
 
     userLogin({ commit }, { email, password }) {
@@ -136,6 +157,7 @@ export default new Vuex.Store({
   getters: {
     user: state => state.user,
     events: state => state.events,
-    settings: state => state.settings
+    settings: state => state.settings,
+    focus: state => state.focus
   }
 })

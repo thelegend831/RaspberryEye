@@ -16,7 +16,7 @@ export default {
     data() {
       return {
         scrollDebounce: true,
-        numberOfEventsToShow: 24
+        numberOfWindows: 0
       }
     },
 
@@ -41,8 +41,7 @@ export default {
     },
 
     mounted() {
-      this.$store.dispatch('getEvents', { pageSize: this.numberOfEventsToShow, groupTime: this.$store.getters.settings.groupTime });
-      this.hookUpScroll();
+      //this.hookUpScroll();
     }
 }
 </script>
