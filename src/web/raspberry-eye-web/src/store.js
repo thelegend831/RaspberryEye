@@ -23,6 +23,10 @@ export default new Vuex.Store({
   },
 
   mutations: {
+    incrimentPageSize(state) {
+      state.eventPageSize += state.eventPageSize;
+    },
+
     setFocus(state, focus) {
       state.focus = focus;
     },
@@ -55,21 +59,22 @@ export default new Vuex.Store({
 
   actions: {
 
-    getEvents({ commit }, { pageSize, groupTime }) {
+    getEvents({ commit }, { groupTime }) {
       return new Promise((resolve, reject) => {
         // Unsubscribe if needed  
         if (this.state.unsubscribe) {
           this.state.unsubscribe();
         }
+
         this.state.unsubscribe = Firebase
           .firestore()
           .collection('events')
           .orderBy('date', 'desc')
-          .limit(pageSize)
+          .limit(this.state.eventPageSize)
           .onSnapshot((querySnapshot) => {
             let data = querySnapshot.docs.map(x => x.data());
 
-            let eventsByTimeWindow = data.reduce(function (accum, event) {
+            let eventsByTimeWindow = data.reduce((accum, event) => {
               if (accum.length) {
                 let last = accum[accum.length - 1];
                 if (last.end - event.date.seconds < groupTime) {
@@ -136,7 +141,7 @@ export default new Vuex.Store({
           commit('setSettings', newSettings);
 
           // now we've got the settings we can reload the events
-          this.dispatch('getEvents', { pageSize: this.state.eventPageSize, groupTime: newSettings.groupTime });
+          this.dispatch('getEvents', { groupTime: newSettings.groupTime });
         });
     },
 
