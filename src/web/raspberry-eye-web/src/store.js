@@ -3,7 +3,6 @@ import Vuex from 'vuex'
 import Firebase, { firestore } from 'firebase'
 import { config } from '../private/config'
 import router from './router'
-import { stat } from 'fs';
 
 Firebase.initializeApp(config);
 Vue.use(Vuex)
