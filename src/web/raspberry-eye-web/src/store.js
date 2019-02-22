@@ -40,7 +40,7 @@ export default new Vuex.Store({
       // Fire and forget and send this back to the db 
       let settingsRef = Firebase.firestore().collection('settings').doc(this.state.user.uid);
       settingsRef.set(settings).then(() => {
-        console.log('User settings updated');
+        console.log('Store: User settings updated');
       })
         .catch(error => {
           console.error(error);
@@ -88,7 +88,7 @@ export default new Vuex.Store({
             }, []);
 
             commit('setEvents', eventsByTimeWindow);
-            console.log('Finished getting events from firebase snapshot, setting window title');
+            console.log('Store: Finished getting events from firebase snapshot, setting window title');
             if (!this.state.focus && !document.title.startsWith('*')) {
               document.title = '* ' + document.title;
             }
@@ -113,7 +113,7 @@ export default new Vuex.Store({
     },
 
     getUserSettings({ commit }, { uid }) {
-      console.log('Getting user settings from db');
+      console.log('Store: Getting user settings from db');
 
       Firebase
         .firestore()
@@ -121,14 +121,14 @@ export default new Vuex.Store({
         .doc(uid)
         .onSnapshot((doc) => {
           let newSettings = {};
-          console.log('User settings in db changed');
+          console.log('Store: User settings in db changed');
 
           // we want to watch the user settings to make sure we update the events when the user changes their settings
           if (doc.exists) {
             newSettings = doc.data();
           }
           else {
-            console.log('Creating new settings objcet for user: ' + uid);
+            console.log('Store: Creating new settings objcet for user: ' + uid);
 
             // Default user settings
             newSettings = {

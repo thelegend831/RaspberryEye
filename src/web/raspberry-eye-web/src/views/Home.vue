@@ -27,25 +27,25 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["events", "groupTime"])
+    ...mapGetters(["events", "settings"])
   },
 
   methods: {
     hookUpScroll() {
       window.onscroll = () => {
         let bottomOfWindow =
-          document.documentElement.scrollTop + window.innerHeight >
-          document.documentElement.offsetHeight;
+          document.documentElement.scrollTop + window.innerHeight > document.documentElement.offsetHeight
+          && document.documentElement.offsetHeight > window.innerHeight;
 
         if (bottomOfWindow && this.scrollDebounce) {
           this.scrollDebounce = false;
 
           // Load more data and reset the debounce
-          console.log("Fetching more events");
+          console.log("Home: Fetching more events");
           this.numberOfEventsToShow += this.numberOfEventsToShow;
           this.$store.commit("incrimentPageSize");
           this.$store
-            .dispatch("getEvents", { groupTime: this.groupTime })
+            .dispatch("getEvents", { groupTime: this.settings.groupTime })
             .then(() => {
               this.scrollDebounce = true;
             });
