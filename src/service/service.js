@@ -8,6 +8,16 @@ var fs = require('fs');
 var admin = require('firebase-admin');
 var serviceAccount = require('./key.json');
 
+// MQTT
+const mqtt = require('mqtt');
+const client = mqtt.connect('mqtt://hassio.home');
+
+client.on('connect', () => {
+    client.publish('raspberryeye/connected', 'true');
+  });
+
+
+
 // Setup the debounce flag
 var monitoring = true;
 
@@ -76,10 +86,22 @@ function captureImage(callback) {
     });
 }
 
+function publishMqttStateChange(fileContents) {
+    let state = {
+        image: fileContents,
+        timeStamp: new Date()
+    };
+
+    client.publish('rasberryeye/state', JSON.stringify(state));
+}
+
 function uploadImage(fileName) {
 
     const db = admin.firestore();
     var fileContents = base64_encode('./frames/' + fileName);
+
+    console.log('Publishing MQTT event');
+    publishMqttStateChange(fileContents);
 
     console.log('File Contents converted to base64');
 
